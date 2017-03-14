@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
  * Created by haidash on 01.03.17.
  */
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
