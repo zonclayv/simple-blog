@@ -1,6 +1,7 @@
 package by.haidash.blog.server.repository;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.security.access.prepost.PostAuthorize;
 
 import by.haidash.blog.server.model.entity.Post;
@@ -8,7 +9,7 @@ import by.haidash.blog.server.model.entity.Post;
 /**
  * Created by haidash on 28.02.17.
  */
-@PostAuthorize("isFullyAuthenticated()")
+@RepositoryRestResource(path = "posts")
 public interface PostRepository extends CrudRepository<Post, Long> {
 
     @Override
