@@ -40,30 +40,30 @@ public class Post  implements Serializable {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "content", nullable = false)
     @Size(max = 2000)
+    @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private PostStatus status = PostStatus.DRAFT;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "createdBy")
     @CreatedBy
+    @JoinColumn(name = "createdBy")
+    @ManyToOne(fetch = FetchType.LAZY)
     private User createdBy;
 
-    @Column(name = "created_date", nullable = false)
     @CreatedDate
+    @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
     @ManyToOne
-    @JoinColumn(name = "last_modified_by")
     @LastModifiedBy
+    @JoinColumn(name = "last_modified_by")
     private User lastModifiedBy;
 
-    @Column(name = "last_modified_date", nullable = false)
     @LastModifiedDate
+    @Column(name = "last_modified_date", nullable = false)
     private LocalDateTime lastModifiedDate;
 
     public Post() {

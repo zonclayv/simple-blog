@@ -3,6 +3,7 @@ package by.haidash.blog.server.model.entity;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -24,7 +25,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "comment")
 @EntityListeners(AuditingEntityListener.class)
-public class Comment  implements Serializable {
+public class Comment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +33,8 @@ public class Comment  implements Serializable {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "created_by")
     @CreatedBy
+    @JoinColumn(name = "created_by")
     private User createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,8 +48,8 @@ public class Comment  implements Serializable {
     @Column(name = "text", nullable = false)
     private String text;
 
-    @Column(name = "created_on")
     @CreatedDate
+    @Column(name = "created_on")
     private LocalDateTime createdDate;
 
     public Comment(){

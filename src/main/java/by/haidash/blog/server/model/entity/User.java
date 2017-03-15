@@ -59,8 +59,8 @@ public class User implements UserDetails, Serializable {
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
-    @Column(name = "created_date")
     @CreatedDate
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
 
     @Override
