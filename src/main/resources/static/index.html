@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="utf-8">
+    <title>Simple Blog</title>
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" ui-sref="home">Admin Panel</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a ui-sref="login" ui-sref-active="active">Login</a></li>
+                    <li><a ui-sref="logout" ui-sref-active="active">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div ui-view></div>
+
+</div>
+<script src="js/external.js"></script>
+<script src="js/simple-blog-client.js"></script>
+</body>
+</html>

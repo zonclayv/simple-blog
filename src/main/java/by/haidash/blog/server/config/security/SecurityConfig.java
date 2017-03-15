@@ -41,19 +41,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests()
-                .regexMatchers(HttpMethod.POST, "/users")
-                .permitAll()
+                    .authorizeRequests()
+                    .regexMatchers(HttpMethod.POST, "/api/users")
+                    .permitAll()
                 .and()
-                .authorizeRequests()
-                .anyRequest()
-                .fullyAuthenticated()
+                    .authorizeRequests()
+                    .regexMatchers("/api/*")
+                    .fullyAuthenticated()
                 .and()
-                .httpBasic()
+                    .httpBasic()
                 .and()
-                .csrf()
-                .disable();
+                    .csrf()
+                    .disable();
     }
 }

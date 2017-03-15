@@ -1,0 +1,20 @@
+{
+  "name": "simple-blog-client",
+  "version": "0.0.1",
+  "description": "simple-blog-client",
+  "main": "gruntfile.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Aleh Haidash",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-bower-task": "^0.4.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-htmlmin": "^2.0.0",
+    "grunt-contrib-uglify": "^2.0.0",
+    "grunt-contrib-watch": "^1.0.0"
+  }
+}

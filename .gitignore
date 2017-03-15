@@ -7,3 +7,6 @@
 *.iws
 *.iml
 *.ipr
+/bower_components/
+/external/
+/node_modules/

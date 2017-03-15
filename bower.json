@@ -1,0 +1,10 @@
+{
+  "name": "simple-blog-client",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular-resource": "latest",
+    "angular-ui-router": "latest",
+    "bootstrap": "latest",
+    "bootstrap-css": "latest"
+  }
+}
