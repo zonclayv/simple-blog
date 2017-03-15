@@ -19,12 +19,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 /**
  * Created by haidash on 10.03.17.
  */
+@Data
 @Entity
+@NoArgsConstructor
 @Table(name = "comment")
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(of = {"id", "text", "post"})
 public class Comment implements Serializable {
 
     @Id
@@ -51,55 +58,4 @@ public class Comment implements Serializable {
     @CreatedDate
     @Column(name = "created_on")
     private LocalDateTime createdDate;
-
-    public Comment(){
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Comment getParent() {
-        return parent;
-    }
-
-    public void setParent(Comment parent) {
-        this.parent = parent;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
 }
