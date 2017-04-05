@@ -25,12 +25,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @PreAuthorize("(#entity.id==null) or hasRole('ADMIN')")
     User save(User entity);
 
-    @RestResource(exported = false)
-    Optional<User> findOneByEmail(@Param("email") String email);
-
-    @RestResource(exported = false)
-    Optional<User> findOneByUsername(@Param("username") String username);
-
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     User findOne(Long id);

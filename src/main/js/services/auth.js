@@ -1,17 +1,13 @@
 angular
   .module('app')
   .factory('AuthService',
-  ['$http', '$rootScope', function ($http, $rootScope) {
+  ['$http', '$rootScope', '$localStorage', function ($http, $rootScope, $localStorage) {
 
     function login(credentials) {
-
-      let authData = btoa(credentials.user + ":" + credentials.password);
-      let promise = $http.get('auth/login', {
-        headers: (credentials) ? {authorization: "Basic " + authData} : {}
-      });
+      let promise = $http.post('auth/login', credentials);
 
       promise.then(function (response) {
-          loggedIn(response.data, authData);
+          loggedIn(credentials.username, response.data.token);
         }, function () {
           loggedOut();
         });
@@ -20,31 +16,35 @@ angular
     }
 
     function logout() {
-      return $http.get('auth/logout', {}).then(function () {
+      return $http.post('auth/logout', {}).then(function () {
         loggedOut();
       }, function () {
         loggedOut();
       });
     }
 
-    function loggedIn(data, authData) {
-      $rootScope.authenticated = !!data.username;
-      $rootScope.currentUser.name = data.username;
-      $rootScope.currentUser.role = data.role;
-      $rootScope.currentUser.authData = authData;
+    function loggedIn(username, token) {
+      $rootScope.authenticated = !!token;
+      $rootScope.currentUser = {};
+      $rootScope.currentUser.name = username;
+      $rootScope.currentUser.token = token;
 
-      $http.defaults.headers.common['Authorization'] = 'Basic ' + authData;
+      $localStorage.currentUser = { username: username, token: token };
+
+      $http.defaults.headers.common['Authorization'] = token;
     }
 
     function loggedOut() {
       $rootScope.authenticated = false;
       $rootScope.currentUser = {};
 
-      $http.defaults.headers.common.Authorization = 'Basic';
+      $http.defaults.headers.common.Authorization = '';
+      delete $localStorage.currentUser;
     }
 
      return {
        login: login,
-       logout: logout
+       logout: logout,
+       loggedIn: loggedIn,
      };
   }]);

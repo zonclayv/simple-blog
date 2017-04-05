@@ -1,6 +1,7 @@
 angular
   .module('app', [
-    'ui.router'
+    'ui.router',
+    'ngStorage'
   ])
   .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
     $stateProvider
@@ -27,22 +28,38 @@ angular
         controller: 'RegisterCtrl',
       });
 
+    $locationProvider.html5Mode({
+      enabled: true,
+      requireBase: false
+    });
+
     $urlRouterProvider.otherwise('home');
-  }]);
+  }])
+  .run(function ($rootScope, $http, $location, $localStorage, AuthService){
+    // keep user logged in after page refresh
+    if ($localStorage.currentUser) {
+      AuthService.loggedIn($localStorage.currentUser.username, $localStorage.currentUser.token);
+    }
+
+    // redirect to login page if not logged in and trying to access a restricted page
+    $rootScope.$on('$locationChangeStart', function (event, next, current) {
+      var publicPages = ['/login', '/register'];
+      var restrictedPage = publicPages.indexOf($location.path()) === -1;
+      if (restrictedPage && !$localStorage.currentUser) {
+        $location.path('/login');
+      }
+    });
+});
 angular
   .module('app')
   .factory('AuthService',
-  ['$http', '$rootScope', function ($http, $rootScope) {
+  ['$http', '$rootScope', '$localStorage', function ($http, $rootScope, $localStorage) {
 
     function login(credentials) {
-
-      let authData = btoa(credentials.user + ":" + credentials.password);
-      let promise = $http.get('auth/login', {
-        headers: (credentials) ? {authorization: "Basic " + authData} : {}
-      });
+      let promise = $http.post('auth/login', credentials);
 
       promise.then(function (response) {
-          loggedIn(response.data, authData);
+          loggedIn(credentials.username, response.data.token);
         }, function () {
           loggedOut();
         });
@@ -51,32 +68,36 @@ angular
     }
 
     function logout() {
-      return $http.get('auth/logout', {}).then(function () {
+      return $http.post('auth/logout', {}).then(function () {
         loggedOut();
       }, function () {
         loggedOut();
       });
     }
 
-    function loggedIn(data, authData) {
-      $rootScope.authenticated = !!data.username;
-      $rootScope.currentUser.name = data.username;
-      $rootScope.currentUser.role = data.role;
-      $rootScope.currentUser.authData = authData;
+    function loggedIn(username, token) {
+      $rootScope.authenticated = !!token;
+      $rootScope.currentUser = {};
+      $rootScope.currentUser.name = username;
+      $rootScope.currentUser.token = token;
 
-      $http.defaults.headers.common['Authorization'] = 'Basic ' + authData;
+      $localStorage.currentUser = { username: username, token: token };
+
+      $http.defaults.headers.common['Authorization'] = token;
     }
 
     function loggedOut() {
       $rootScope.authenticated = false;
       $rootScope.currentUser = {};
 
-      $http.defaults.headers.common.Authorization = 'Basic';
+      $http.defaults.headers.common.Authorization = '';
+      delete $localStorage.currentUser;
     }
 
      return {
        login: login,
-       logout: logout
+       logout: logout,
+       loggedIn: loggedIn,
      };
   }]);
 
@@ -102,7 +123,7 @@ angular
 
       $scope.login = function () {
         AuthService
-          .login({user: $scope.credentials.userId, password: $scope.credentials.password})
+          .login({username: $scope.credentials.userId, password: $scope.credentials.password})
           .then(function () {
             $state.go('home');
           }, function () {

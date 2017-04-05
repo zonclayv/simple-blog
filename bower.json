@@ -5,6 +5,7 @@
     "angular-resource": "latest",
     "angular-ui-router": "latest",
     "bootstrap": "latest",
-    "bootstrap-css": "latest"
+    "bootstrap-css": "latest",
+    "ngstorage": "latest"
   }
 }

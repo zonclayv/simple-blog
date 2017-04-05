@@ -37,7 +37,8 @@ module.exports = function(grunt) {
              'external/js/bootstrap/bootstrap.js',
              'external/js/angular/angular.js',
              'external/js/angular-resource/angular-resource.js',
-             'external/js/angular-ui-router/angular-ui-router.js'],
+             'external/js/angular-ui-router/angular-ui-router.js',
+             'external/js/ngstorage/ngStorage.js'],
        dest: '<%= dirs.dest %>/js/external.js'
      },
      appJs: {
@@ -66,7 +67,7 @@ module.exports = function(grunt) {
 
     watch: {
       dev: {
-        files: ['gruntfile.js', 'src/main/js/**/*.*', 'src/main/resources/static/css/own.css', 'src/main/resources/static/index.html'],
+        files: ['gruntfile.js', 'src/main/js/**/*.*', 'src/main/resources/static/css/own.css', 'src/main/resources/static/index.html', 'src/main/resources/static/views/*.*'],
         tasks: ['concat:appJs', 'concat:appJsDev', 'concat:css', 'concat:cssDev'],
         options: {
           atBegin: true

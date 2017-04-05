@@ -1,6 +1,7 @@
 package by.haidash.blog.server.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -37,7 +38,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "user")
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(of = {"id", "email", "username"})
-public class User implements UserDetails, Serializable {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
@@ -49,15 +50,14 @@ public class User implements UserDetails, Serializable {
     @Column(name = "username", unique = true)
     private String username;
 
-    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "first_name")
-    private String firstName;
+    private String firstname;
 
     @Column(name = "last_name")
-    private String lastName;
+    private String lastname;
 
     @Column(name = "avatar")
     private byte[] avatar;
@@ -70,32 +70,16 @@ public class User implements UserDetails, Serializable {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_" + this.role));
+    @Column(name = "enabled")
+    private boolean enabled = true;
+
+    @JsonIgnore
+    public String getPassword(){
+        return password;
     }
 
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isEnabled() {
-        return true;
+    @JsonProperty
+    public void setPassword(final String password) {
+        this.password = password;
     }
 }
