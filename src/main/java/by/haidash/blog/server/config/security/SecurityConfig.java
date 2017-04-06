@@ -53,11 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(final WebSecurity web) throws Exception {
-//        web.ignoring().antMatchers(HttpMethod.POST,"/users");
-    }
-
-    @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)

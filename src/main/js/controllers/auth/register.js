@@ -8,9 +8,10 @@ angular
         AuthService
           .register($scope.user)
           .then(function () {
-            $state.go('home');
+            $state.go('login');
           }, function (e) {
-            console.log(e);
+            let data = e.data;
+            $scope.error = data.errors ? data.errors.join("\n") : data.message;
           });
       };
     }]);
