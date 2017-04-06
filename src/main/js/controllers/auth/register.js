@@ -1,16 +1,16 @@
 angular
   .module('app')
   .controller('RegisterCtrl',
-    ['$scope', 'UserService', '$state', function ($scope, UserService, $state) {
+    ['$scope', 'AuthService', '$state', function ($scope, AuthService, $state) {
       $scope.user = {};
 
       $scope.register = function () {
-        UserService
+        AuthService
           .register($scope.user)
           .then(function () {
             $state.go('home');
-          }, function () {
-            //TODO
+          }, function (e) {
+            console.log(e);
           });
       };
     }]);

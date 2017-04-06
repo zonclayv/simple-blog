@@ -3,15 +3,11 @@ angular
     'ui.router',
     'ngStorage'
   ])
-  .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
+  .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$httpProvider', function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $stateProvider
       .state('home', {
         url: '/',
         templateUrl: 'views/home.html'
-      })
-      .state('forbidden', {
-        url: '/forbidden',
-        templateUrl: 'views/forbidden.html',
       })
       .state('logout', {
         url: '/logout',
@@ -25,7 +21,15 @@ angular
       .state('register', {
         url: '/register',
         templateUrl: 'views/register.html',
-        controller: 'RegisterCtrl',
+        controller: 'RegisterCtrl'
+      })
+      .state('404', {
+        url: '/404',
+        templateUrl: 'views/404.html'
+      })
+      .state('401', {
+        url: '/401',
+        templateUrl: 'views/401.html'
       });
 
     $locationProvider.html5Mode({
@@ -33,20 +37,19 @@ angular
       requireBase: false
     });
 
-    $urlRouterProvider.otherwise('home');
+    $urlRouterProvider.otherwise('404');
   }])
-  .run(function ($rootScope, $http, $location, $localStorage, AuthService){
-    // keep user logged in after page refresh
+.run(function ($rootScope, $http, $location, $localStorage, AuthService){
+
     if ($localStorage.currentUser) {
       AuthService.loggedIn($localStorage.currentUser.username, $localStorage.currentUser.token);
     }
 
-    // redirect to login page if not logged in and trying to access a restricted page
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
-      var publicPages = ['/login', '/register'];
+      var publicPages = ['/login', '/register', '/home', '/404', '/401', '/'];
       var restrictedPage = publicPages.indexOf($location.path()) === -1;
       if (restrictedPage && !$localStorage.currentUser) {
-        $location.path('/login');
+        $location.path('/401');
       }
     });
 });
@@ -55,8 +58,11 @@ angular
   .factory('AuthService',
   ['$http', '$rootScope', '$localStorage', function ($http, $rootScope, $localStorage) {
 
+    const AUTH_PREFIX = "auth/";
+
+
     function login(credentials) {
-      let promise = $http.post('auth/login', credentials);
+      let promise = $http.post(AUTH_PREFIX + 'login', credentials);
 
       promise.then(function (response) {
           loggedIn(credentials.username, response.data.token);
@@ -68,7 +74,7 @@ angular
     }
 
     function logout() {
-      return $http.post('auth/logout', {}).then(function () {
+      return $http.post(AUTH_PREFIX + 'logout', {}).then(function () {
         loggedOut();
       }, function () {
         loggedOut();
@@ -94,10 +100,15 @@ angular
       delete $localStorage.currentUser;
     }
 
+    function register(user) {
+      return $http.post(AUTH_PREFIX + 'register', user);
+    }
+
      return {
        login: login,
        logout: logout,
        loggedIn: loggedIn,
+       register: register
      };
   }]);
 
@@ -106,12 +117,7 @@ angular
   .factory('UserService',
   ['$http', function ($http) {
 
-    function register(user) {
-      return $http.post('users', user);
-    }
-
      return {
-       register: register
      };
     }]);
 
@@ -126,8 +132,8 @@ angular
           .login({username: $scope.credentials.userId, password: $scope.credentials.password})
           .then(function () {
             $state.go('home');
-          }, function () {
-              //TODO
+          }, function (e) {
+            console.log(e);
           });
       };
     }]);
@@ -146,16 +152,16 @@ angular
 angular
   .module('app')
   .controller('RegisterCtrl',
-    ['$scope', 'UserService', '$state', function ($scope, UserService, $state) {
+    ['$scope', 'AuthService', '$state', function ($scope, AuthService, $state) {
       $scope.user = {};
 
       $scope.register = function () {
-        UserService
+        AuthService
           .register($scope.user)
           .then(function () {
             $state.go('home');
-          }, function () {
-            //TODO
+          }, function (e) {
+            console.log(e);
           });
       };
     }]);

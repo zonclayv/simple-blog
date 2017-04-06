@@ -42,14 +42,12 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
         final String authToken = request.getHeader(authorizationHeader);
         final String username = tokenUtil.getUsernameFromToken(authToken);
 
-        LOGGER.info("Checking authentication for user " + username);
-
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             if (tokenUtil.validateToken(authToken, userDetails)) {
                 final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                LOGGER.info("Authenticated user " + username + ", setting security context");
+                LOGGER.info("Authenticated user " + username + ", setting security context...");
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }

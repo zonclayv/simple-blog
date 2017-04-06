@@ -3,15 +3,11 @@ angular
     'ui.router',
     'ngStorage'
   ])
-  .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $locationProvider) {
+  .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$httpProvider', function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $stateProvider
       .state('home', {
         url: '/',
         templateUrl: 'views/home.html'
-      })
-      .state('forbidden', {
-        url: '/forbidden',
-        templateUrl: 'views/forbidden.html',
       })
       .state('logout', {
         url: '/logout',
@@ -25,7 +21,15 @@ angular
       .state('register', {
         url: '/register',
         templateUrl: 'views/register.html',
-        controller: 'RegisterCtrl',
+        controller: 'RegisterCtrl'
+      })
+      .state('404', {
+        url: '/404',
+        templateUrl: 'views/404.html'
+      })
+      .state('401', {
+        url: '/401',
+        templateUrl: 'views/401.html'
       });
 
     $locationProvider.html5Mode({
@@ -33,20 +37,19 @@ angular
       requireBase: false
     });
 
-    $urlRouterProvider.otherwise('home');
+    $urlRouterProvider.otherwise('404');
   }])
-  .run(function ($rootScope, $http, $location, $localStorage, AuthService){
-    // keep user logged in after page refresh
+.run(function ($rootScope, $http, $location, $localStorage, AuthService){
+
     if ($localStorage.currentUser) {
       AuthService.loggedIn($localStorage.currentUser.username, $localStorage.currentUser.token);
     }
 
-    // redirect to login page if not logged in and trying to access a restricted page
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
-      var publicPages = ['/login', '/register'];
+      var publicPages = ['/login', '/register', '/home', '/404', '/401', '/'];
       var restrictedPage = publicPages.indexOf($location.path()) === -1;
       if (restrictedPage && !$localStorage.currentUser) {
-        $location.path('/login');
+        $location.path('/401');
       }
     });
 });

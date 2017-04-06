@@ -10,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,11 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import by.haidash.blog.server.config.security.jwt.AuthenticationRequest;
+import by.haidash.blog.server.config.security.jwt.AuthenticationUser;
 import by.haidash.blog.server.config.security.jwt.TokenResponse;
 import by.haidash.blog.server.config.security.jwt.TokenUtil;
-import by.haidash.blog.server.config.security.jwt.AuthenticationUser;
+import by.haidash.blog.server.model.dto.NewUserForm;
+import by.haidash.blog.server.model.entity.User;
+import by.haidash.blog.server.repository.InnerUserRepository;
 
 /**
  * Created by haidash on 04.04.17.
@@ -30,8 +35,14 @@ import by.haidash.blog.server.config.security.jwt.AuthenticationUser;
 @RequestMapping("/auth")
 public class AuthenticationRestController {
 
+    @Value("${authentication.header}")
+    public String authorizationHeader;
+
     @Autowired
     private TokenUtil tokenUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -39,8 +50,8 @@ public class AuthenticationRestController {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @Value("${authentication.header}")
-    public String authorizationHeader;
+    @Autowired
+    private InnerUserRepository innerUserRepository;
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> login(final @RequestBody AuthenticationRequest authenticationRequest) throws AuthenticationException {
@@ -86,6 +97,19 @@ public class AuthenticationRestController {
         String username = tokenUtil.getUsernameFromToken(token);
         AuthenticationUser user = (AuthenticationUser) userDetailsService.loadUserByUsername(username);
         return user;
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ResponseEntity<?> register(final @Valid @RequestBody NewUserForm userForm) {
+
+        final User user =new User();
+        user.setUsername(userForm.getUsername());
+        user.setEmail(userForm.getEmail());
+        user.setPassword(passwordEncoder.encode(userForm.getPassword()));
+        user.setFirstname(userForm.getFirstname());
+        user.setLastname(userForm.getLastname());
+
+        return ResponseEntity.ok(innerUserRepository.save(user));
     }
 
 }

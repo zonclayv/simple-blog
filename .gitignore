@@ -10,3 +10,6 @@
 /bower_components/
 /external/
 /node_modules/
+/src/main/resources/static/css/
+!/src/main/resources/static/css/own.css
+/src/main/resources/static/js/

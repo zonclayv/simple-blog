@@ -14,50 +14,7 @@ import by.haidash.blog.server.model.entity.User;
 /**
  * Created by haidash on 28.02.17.
  */
+@PreAuthorize("hasRole('ADMIN')")
 @RepositoryRestResource(path = "users")
 public interface UserRepository extends CrudRepository<User, Long> {
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    Iterable<User> findAll();
-
-    @Override
-    @PreAuthorize("(#entity.id==null) or hasRole('ADMIN')")
-    User save(User entity);
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    User findOne(Long id);
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    boolean exists(Long id);
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    long count();
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    void delete(Long id);
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    void delete(User entity);
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    void deleteAll();
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    Iterable<User> findAll(Iterable<Long> longs);
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    void delete(Iterable<? extends User> entities);
-
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    <S extends User> Iterable<S> save(Iterable<S> entities);
 }

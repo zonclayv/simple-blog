@@ -9,8 +9,8 @@ angular
           .login({username: $scope.credentials.userId, password: $scope.credentials.password})
           .then(function () {
             $state.go('home');
-          }, function () {
-              //TODO
+          }, function (e) {
+            console.log(e);
           });
       };
     }]);

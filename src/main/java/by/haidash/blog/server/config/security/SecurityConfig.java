@@ -13,6 +13,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import by.haidash.blog.server.config.security.jwt.AuthenticationTokenEntryPoint;
@@ -35,7 +37,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureAuthentication(final AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(userDetailsService);
+        authenticationManagerBuilder
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -45,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(HttpMethod.POST,"/users");
+//        web.ignoring().antMatchers(HttpMethod.POST,"/users");
     }
 
     @Override
@@ -57,23 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .authorizeRequests()
-                    .regexMatchers(HttpMethod.POST, "/users")
-                        .permitAll()
-                    .antMatchers(HttpMethod.GET,
-                                        "/",
-                                        "/login",
-                                        "/logout",
-                                        "/register",
-                                        "/*.html",
-                                        "/favicon.ico",
-                                        "/**/*.html",
-                                        "/**/*.css",
-                                        "/**/*.js")
-                        .permitAll()
-                    .antMatchers("/auth/**")
-                        .permitAll()
-                    .anyRequest()
-                        .authenticated()
+                    .antMatchers("/api/**").authenticated()
+                    .anyRequest().permitAll()
                 .and()
                     .csrf()
                     .disable()
