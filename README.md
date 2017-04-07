@@ -1,5 +1,5 @@
 # simple-blog
-It's simple example of using Spring Boot on backend and Angular 1 on frontend.
+It's a simple example of using Spring Boot and Angular.
 
 ## Tools:
 ##### Backend
