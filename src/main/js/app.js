@@ -30,6 +30,21 @@ angular
       .state('401', {
         url: '/401',
         templateUrl: 'views/401.html'
+      })
+      .state('users', {
+        url: '/users',
+        templateUrl: 'views/users.html',
+        controller: 'AllUsersCtrl'
+      })
+      .state('users-info', {
+        url: '/users/:id',
+        templateUrl: 'views/user-info.html',
+        controller: 'ProfileCtrl'
+      })
+      .state('me', {
+        url: '/me',
+        templateUrl: 'views/user-info.html',
+        controller: 'MyProfileCtrl'
       });
 
     $locationProvider.html5Mode({

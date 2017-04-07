@@ -15,9 +15,16 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
+                    <li><a ng-show="hasRole(['ADMIN'])" ui-sref="users" ui-sref-active="active">All Users</a></li>
                     <li><a ui-sref="login" ui-sref-active="active" ng-hide="authenticated">Login</a></li>
                     <li><a ui-sref="logout" ui-sref-active="active" ng-show="authenticated">Logout</a></li>
                 </ul>
+                <div ng-show="currentUser.name" class="navbar-text navbar-right">
+                    Logged in as
+                    <a ui-sref-active="active" ui-sref="me">
+                        <span class="user-subhead">{{currentUser.name}}</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>

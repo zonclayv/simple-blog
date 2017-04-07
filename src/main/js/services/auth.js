@@ -5,6 +5,13 @@ angular
 
     const AUTH_PREFIX = "auth/";
 
+    $rootScope.hasRole = function(roles){
+      if(!roles || !$rootScope.currentUser.role){
+        return false;
+      }
+
+      return roles.indexOf($rootScope.currentUser.role)>-1;
+    };
 
     function login(credentials) {
       let promise = $http.post(AUTH_PREFIX + 'login', credentials);
@@ -18,12 +25,26 @@ angular
       return promise;
     }
 
+    function checkRoles() {
+      me().then(function (response) {
+          let user = response.data;
+          $rootScope.currentUser.role = user.role;
+        });
+    }
+
+    function me() {
+      return $http.get(AUTH_PREFIX + 'me');
+    }
+
     function logout() {
-      return $http.post(AUTH_PREFIX + 'logout', {}).then(function () {
+      let promise = $http.post(AUTH_PREFIX + 'logout', {})
+      promise.then(function () {
         loggedOut();
       }, function () {
         loggedOut();
       });
+
+      return promise;
     }
 
     function loggedIn(username, token) {
@@ -35,6 +56,8 @@ angular
       $localStorage.currentUser = { username: username, token: token };
 
       $http.defaults.headers.common['Authorization'] = token;
+
+      checkRoles();
     }
 
     function loggedOut() {
@@ -50,6 +73,7 @@ angular
     }
 
      return {
+       me: me,
        login: login,
        logout: logout,
        loggedIn: loggedIn,
