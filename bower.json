@@ -4,8 +4,15 @@
   "dependencies": {
     "angular-resource": "latest",
     "angular-ui-router": "latest",
-    "bootstrap": "latest",
     "bootstrap-css": "latest",
-    "ngstorage": "latest"
+    "ngstorage": "latest",
+    "angular-spring-data-rest": "latest"
+  },
+  "exportsOverride": {
+    "bootstrap-css": {
+      "../js": "js/*.js",
+      "../css": "css/*.css",
+      "../fonts": "fonts/*.*"
+    }
   }
 }

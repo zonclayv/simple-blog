@@ -14,6 +14,7 @@ module.exports = function(grunt) {
         options: {
           install: true,
           copy: true,
+          layout: 'byType',
           targetDir: './external/js',
           cleanTargetDir: true
         }
@@ -31,14 +32,24 @@ module.exports = function(grunt) {
       }
     },
 
+    copy: {
+     main: {
+       expand: true,
+       cwd: 'external/fonts/bootstrap-css',
+       src: '**',
+       dest: '<%= dirs.dest %>/fonts/'
+     },
+    },
+
     concat: {
      extJs: {
        src: ['external/js/jquery/jquery.js',
-             'external/js/bootstrap/bootstrap.js',
+             'external/js/bootstrap-css/bootstrap.js',
              'external/js/angular/angular.js',
              'external/js/angular-resource/angular-resource.js',
              'external/js/angular-ui-router/angular-ui-router.js',
-             'external/js/ngstorage/ngStorage.js'],
+             'external/js/ngstorage/ngStorage.js',
+             'external/js/angular-spring-data-rest/angular-spring-data-rest.js'],
        dest: '<%= dirs.dest %>/js/external.js'
      },
      appJs: {
@@ -54,12 +65,12 @@ module.exports = function(grunt) {
        dest: '<%= dirs.buildDest %>/js/simple-blog-client.js'
      },
      css: {
-       src: ['external/js/bootstrap-css/bootstrap.min.css',
+       src: ['external/css/bootstrap-css/bootstrap.min.css',
              'src/main/resources/static/css/own.css'],
        dest: '<%= dirs.dest %>/css/style.css'
      },
      cssDev: {
-       src: ['external/js/bootstrap-css/bootstrap.min.css',
+       src: ['external/css/bootstrap-css/bootstrap.min.css',
              'src/main/resources/static/css/own.css'],
        dest: '<%= dirs.buildDest %>/css/style.css'
      }
@@ -81,8 +92,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-bower-task');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
-  grunt.registerTask('build', ['concat:appJs', 'concat:css']);
-  grunt.registerTask('buildFull', ['bower', 'concat', 'uglify:dist']);
+  grunt.registerTask('build', ['concat:appJs', 'concat:css', 'copy:main']);
+  grunt.registerTask('buildFull', ['bower', 'concat', 'uglify:dist', 'copy:main']);
   grunt.registerTask('dev', ['buildFull', 'watch:dev']);
 };
