@@ -34,11 +34,6 @@ public class AuthenticationUser implements UserDetails {
     private final LocalDateTime createdDate;
     private final byte[] avatar;
 
-    @JsonIgnore
-    public Long getId() {
-        return id;
-    }
-
     @Override
     public String getUsername() {
         return username;

@@ -74,14 +74,16 @@ public class TokenUtil {
         return expiration.before(new Date());
     }
 
-    public String generateToken(final UserDetails userDetails) {
+    public String generateToken(final AuthenticationUser authenticationUser) {
         final Map<String, Object> claims = new HashMap<>();
+        final String username = authenticationUser.getUsername();
+        final String email = authenticationUser.getEmail();
         claims.put(CLAIM_KEY_CREATED, new Date());
-        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
+        claims.put(CLAIM_KEY_USERNAME, username != null ? username : email);
         return generateToken(claims);
     }
 
-    String generateToken(final Map<String, Object> claims) {
+    private String generateToken(final Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
@@ -108,6 +110,6 @@ public class TokenUtil {
     public Boolean validateToken(final String token, final UserDetails userDetails) {
         final AuthenticationUser user = (AuthenticationUser) userDetails;
         final String username = getUsernameFromToken(token);
-        return username.equals(user.getUsername()) && !isTokenExpired(token);
+        return (username.equals(user.getUsername()) || username.equals(user.getEmail())) && !isTokenExpired(token);
     }
 }

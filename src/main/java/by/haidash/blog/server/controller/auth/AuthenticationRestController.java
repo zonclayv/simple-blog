@@ -59,8 +59,8 @@ public class AuthenticationRestController {
 
         doAuthenticate(authenticationRequest);
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String token = tokenUtil.generateToken(userDetails);
+        final AuthenticationUser authenticationUser = (AuthenticationUser) userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final String token = tokenUtil.generateToken(authenticationUser);
 
         return ResponseEntity.ok(new TokenResponse(token));
     }
