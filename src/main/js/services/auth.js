@@ -3,7 +3,7 @@ angular
   .factory('AuthService',
   ['$http', '$rootScope', '$localStorage', function ($http, $rootScope, $localStorage) {
 
-    const AUTH_PREFIX = "auth/";
+    const AUTH_PREFIX = "/auth/";
 
     $rootScope.hasRole = function(roles){
       if(!roles || !$rootScope.currentUser.role){

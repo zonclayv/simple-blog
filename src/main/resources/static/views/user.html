@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-4 col-sm-6 col-xs-12">
     <div class="text-center">
-      <img ng-src="{{selectedUser.avatar ? 'data:image/JPEG;base64,'+ selectedUser.avatar: 'img/no-image.png'}}"
+      <img ng-src="{{selectedUser.avatar ? 'data:image/JPEG;base64,'+ selectedUser.avatar: '/img/no-image.png'}}"
            class="avatar img-circle img-thumbnail">
       <h6 ng-show="currentUser.hasAdminAuthority">Preferred size - 150px x 150px</h6>
       <input type="file"

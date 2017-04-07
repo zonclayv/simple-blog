@@ -1,13 +1,14 @@
 angular
   .module('app')
-  .controller('AllUsersCtrl', ['$scope', 'UserService', function ($scope, UserService) {
+  .controller('AllUsersCtrl', ['$scope', 'UserService', 'SpringDataRestAdapter', function ($scope, UserService, SpringDataRestAdapter) {
 
     function getUsers() {
-      UserService
-        .getAll()
-        .then(function (results) {
-          $scope.users = results;
-        });
+      let promise = UserService
+        .getAll();
+
+      SpringDataRestAdapter.process(promise).then(function (processedResponse) {
+        $scope.users = processedResponse._embeddedItems;
+      });
     }
 
     getUsers();

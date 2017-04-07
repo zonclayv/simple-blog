@@ -3,7 +3,7 @@ angular
   .factory('UserService',['$http',
     function ($http) {
 
-      const USER_PREFIX = "api/users/";
+      const USER_PREFIX = "/api/users/";
 
       function getAll() {
         return $http.get(USER_PREFIX);

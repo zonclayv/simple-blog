@@ -1,7 +1,8 @@
 angular
   .module('app', [
     'ui.router',
-    'ngStorage'
+    'ngStorage',
+    'spring-data-rest'
   ])
   .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$httpProvider', function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $stateProvider
@@ -36,14 +37,14 @@ angular
         templateUrl: 'views/users.html',
         controller: 'AllUsersCtrl'
       })
-      .state('users-info', {
+      .state('user', {
         url: '/users/:id',
-        templateUrl: 'views/user-info.html',
+        templateUrl: 'views/user.html',
         controller: 'ProfileCtrl'
       })
       .state('me', {
         url: '/me',
-        templateUrl: 'views/user-info.html',
+        templateUrl: 'views/user.html',
         controller: 'MyProfileCtrl'
       });
 
