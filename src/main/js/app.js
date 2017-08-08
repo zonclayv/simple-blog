@@ -57,8 +57,9 @@ angular
   }])
 .run(function ($rootScope, $http, $location, $localStorage, AuthService){
 
-    if ($localStorage.currentUser) {
-      AuthService.loggedIn($localStorage.currentUser.username, $localStorage.currentUser.token);
+    let currentUser = $localStorage.currentUser;
+    if (currentUser) {
+      AuthService.externalLogin(currentUser.username, currentUser.token);
     }
 
     $rootScope.$on('$locationChangeStart', function (event, next, current) {

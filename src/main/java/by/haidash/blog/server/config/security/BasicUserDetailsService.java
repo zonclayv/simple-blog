@@ -24,6 +24,5 @@ public class BasicUserDetailsService implements UserDetailsService {
         final Optional<User> userOption = userId.contains("@") ? userRepository.findOneByEmail(userId) : userRepository.findOneByUsername(userId);
         final User user = userOption.orElseThrow(() -> new UsernameNotFoundException(String.format("User with username or email '%s' was not found", userId)));
         return AuthenticationUserFactory.create(user);
-
     }
 }
