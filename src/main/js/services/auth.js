@@ -6,7 +6,7 @@ angular
     const AUTH_PREFIX = "/auth/";
 
     $rootScope.hasRole = function(roles){
-      if(!roles || !$rootScope.currentUser.role){
+      if(!roles || !$rootScope.currentUser || !$rootScope.currentUser.role){
         return false;
       }
 
