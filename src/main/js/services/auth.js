@@ -37,7 +37,7 @@ angular
     }
 
     function logout() {
-      let promise = $http.post(AUTH_PREFIX + 'logout', {})
+      let promise = $http.post(AUTH_PREFIX + 'logout', {});
       promise.then(function () {
         loggedOut();
       }, function () {
@@ -45,6 +45,10 @@ angular
       });
 
       return promise;
+    }
+
+    function externalLogin(username, token) {
+        loggedIn(username,token);
     }
 
     function loggedIn(username, token) {
@@ -76,7 +80,7 @@ angular
        me: me,
        login: login,
        logout: logout,
-       loggedIn: loggedIn,
+       externalLogin: externalLogin,
        register: register
      };
   }]);
